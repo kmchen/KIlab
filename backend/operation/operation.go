@@ -1,4 +1,4 @@
-package riderOps
+package operation
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"time"
 
-	"test-fullstack-loyalty/backend/model"
-	"test-fullstack-loyalty/backend/store"
+	"KILab/backend/model"
+	"KILab/backend/store"
 )
 
 type Operation struct {
@@ -47,12 +47,13 @@ func NewOperation(store store.Store) *Operation {
 
 // CreateInterviewer create rider with key riderId:timestamp:key
 func (ops *Operation) CreateInterviewer(data model.Interviewer) (string, error) {
-	id := fmt.Printf("%s", time.Now().Unix())
-	newInterviewer := &model.Rider{
+	id := fmt.Sprintf("%s", time.Now().Unix())
+	newInterviewer := &model.Interviewer{
 		Id:       id,
 		Name:     data.Name,
-		TimeSlot: make(model.TimeSlot, 0),
+		TimeSlot: make([]model.TimeSlot, 0),
 	}
+	fmt.Println(id, ".....")
 	if err := ops.store.Set(id, newInterviewer); err != nil {
 		return "", err
 	}

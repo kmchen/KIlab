@@ -4,13 +4,12 @@ package main
 import (
 	"encoding/json"
 	"flag"
-	"fmt"
 	"log"
 	"net/http"
 
-	"test-fullstack-loyalty/backend/model"
-	"test-fullstack-loyalty/backend/operation"
-	"test-fullstack-loyalty/backend/store"
+	"KILab/backend/model"
+	"KILab/backend/operation"
+	"KILab/backend/store"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/gorilla/mux"
@@ -39,16 +38,17 @@ func getInterviewer(w http.ResponseWriter, r *http.Request) {
 func createInterviewer(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	var interviewer model.Interviewer
+	var id string
 	err := decoder.Decode(&interviewer)
-	//fmt.Printf("%v", interviewer)
+	id, err = ops.CreateInterviewer(interviewer)
 	if err != nil {
 		panic(err)
 	}
-	w.Write([]byte("pong"))
+	w.Write([]byte(id))
 }
 
-var store, _ = store.NewRedisStore(func() (redis.Conn, error) { return redis.Dial("tcp", *redisPort) })
-var ops = operation.NewOperation(store)
+var redisStore, _ = store.NewRedisStore(func() (redis.Conn, error) { return redis.Dial("tcp", *redisPort) })
+var ops = operation.NewOperation(redisStore)
 
 func main() {
 
